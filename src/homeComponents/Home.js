@@ -4,7 +4,9 @@ import AllRestaurantInfo from './AllRestaurantInfo';
 
 function Home() {
     return(
+        <>
         <AllRestaurantInfo />
+        </>
     )
 }
 
