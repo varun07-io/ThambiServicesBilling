@@ -200,14 +200,14 @@ function RestaurantMenu() {
        
             <Row>
               <Col>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Group className="mb-3" >
               <Form.Label>Enter the Order Number</Form.Label>
               <Form.Control type="number" placeholder="Enter the order number" />
 
               </Form.Group>
               </Col>
               <Col>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Group className="mb-3" >
               <Form.Label>Today's Date</Form.Label>
               <Form.Control type="date" value={todaysDate} placeholder="Today's Date" onChange={(e) => settodaysDate(e.target.value)} />
 
@@ -219,16 +219,163 @@ function RestaurantMenu() {
           
 
 
-  <Form.Group className="mb-3" controlId="formBasicPassword">
+  <Form.Group className="mb-3" >
     <Form.Label>Delivery Boy Name</Form.Label>
-    <Form.Control type="text" placeholder="Password" />
+
+    <Form.Select aria-label="Select Delivery Boy Name" onChange={(e) => setdeliveryBoyName(e.target.value)}>
+  <option>Select Delivery Boy Name</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</Form.Select>
   </Form.Group>
-  <Form.Group className="mb-3" controlId="formBasicCheckbox">
-    <Form.Check type="checkbox" label="Check me out" />
+  <Row>
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Enter Customer Name</Form.Label>
+              <Form.Control type="text" placeholder="Enter the customer Name" />
+
+              </Form.Group>
+              </Col>
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Enter Customer Phone</Form.Label>
+              <Form.Control type="number" placeholder="Enter the customer phone" />
+
+              </Form.Group>
+              </Col>
+            </Row>
+            <div
+            style={{
+              backgoundColor:'blue'
+            }}
+            >
+
+                  {cart.map((item, i) => (
+    <React.Fragment  key={item.name}>
+      {item.inCart && (
+        <div
+        style={{
+            borderWidth:5,
+            borderRadius: 12,
+            padding:12
+        }}
+        className="flexParent"
+        >
+          <p> Item No: {i}</p>
+          <p> Item Name: {item.name}</p>
+          <p>
+            Item Count: <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "}
+            {item.count} <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button>
+          </p>
+          <p>
+            Item Subtotal: Rs-
+            {Number.isInteger(item.count * item.price)
+              ? item.count * item.price
+              : `${(item.count * item.price).toFixed(2)}`}
+          </p>
+          <RemoveCartItems buttonSize="remove--btn--medium" buttonStyle="remove--btn--outline" onClick={() => removeFromCart(i)}>Remove From Cart</RemoveCartItems>
+          <hr />
+        </div>
+      )}
+    </React.Fragment>
+  ))}
+              {
+    cartCountTotal === 0 ? (
+      <b>Cart is empty</b>
+    ) : (
+      <>
+        <b>
+          <p>Items in Cart: {cartCountTotal}</p>
+          <p>
+            Total Price: Rs-
+            {Number.isInteger(cartPriceTotal)
+              ? cartPriceTotal
+              : cartPriceTotal.toFixed(2)}
+          </p>
+          <BillingButton onClick={() => setIsPopoverOpen(!isPopoverOpen)} buttonSize="billing--btn--medium" buttonStyle="billing--btn--outline" >Proceed for Billing</BillingButton>
+        </b>
+      </>
+    )}
+            </div>
+            <div
+              style={{
+                backgroundColor: '#6AC47E',
+                padding:20,
+                borderRadius: 10,
+                color: 'white',
+                marginTop:12,
+                marginBottom: 12
+              }}
+            >
+  <Row
+
+  >
+              <Col>
+              <Form.Group className="mb-3" >
+    <Form.Label>Pick-Up Location</Form.Label>
+
+    <Form.Select aria-label="Select Pick-up Location" onChange={(e) => setpickup(e.target.value)}>
+  <option>Select Pick-Up Restaurant</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</Form.Select>
   </Form.Group>
-  <Button variant="primary" type="submit">
+              </Col>
+              <Col>
+              <Form.Group className="mb-3" >
+    <Form.Label>Drop Location</Form.Label>
+
+    <Form.Select aria-label="Select Drop Location" onChange={(e) => setdrop(e.target.value)}>
+  <option>Select Drop Location</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</Form.Select>
+  </Form.Group>
+              </Col>
+            </Row>
+           
+            <Row>
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Enter Starting KM</Form.Label>
+              <Form.Control type="number" placeholder="Enter the customer phone" />
+
+              </Form.Group>
+              </Col>
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Enter Starting KM</Form.Label>
+              <Form.Control type="number" placeholder="Enter the customer phone" />
+
+              </Form.Group>
+              </Col>
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Enter Starting KM</Form.Label>
+              <Form.Control type="number" placeholder="Enter the customer phone" />
+
+              </Form.Group>
+              </Col>
+            </Row>
+            <Button className={{alignSelf: 'center'}} variant="primary" type="submit">
+    Calculate
+  </Button>
+            </div>
+            <Form.Group className="mb-3">
+              <Form.Label>Enter Starting KM</Form.Label>
+              <Form.Control type="number" placeholder="Enter the customer phone" />
+
+              </Form.Group>
+
+
+              <div className="d-grid gap-2">
+  <Button variant="primary" type="submit" size="lg">
     Submit
   </Button>
+  </div>
 </Form>
         </>
       ) : (
