@@ -1,0 +1,49 @@
+:root {
+  --primary: #f90716;
+}
+
+.remove--btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.remove--btn--primary {
+  background-color: var(--primary);
+  color: #242424;
+  border: 1px solid var(--primary);
+}
+
+.remove--btn--outline {
+  background-color: #f90716;
+  color: #fff;
+  padding: 1px 20px;
+  border: 1px solid #f90716;
+  transition: all 0.3s ease-out;
+  background-color: #f90716;
+  color: #fff;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
+}
+
+.remove--btn--medium {
+  padding: 1px 15px;
+  font-size: 16px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+.remove--btn--large {
+  padding: 12px 26px;
+  font-size: 20px;
+}
+
+.remove--btn--medium:hover,
+.remove--btn--large:hover {
+  background: #fff;
+  color: #242424;
+  transition: all 0.3s ease-out;
+}

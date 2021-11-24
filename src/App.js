@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import  Home  from './homeComponents/Home.js';
 import AllRestaurantInfo from './homeComponents/AllRestaurantInfo';
+import RestaurantMenu from './homeComponents/RestaurantMenu.js';
 
 
 
@@ -16,6 +17,7 @@ function App() {
       <Router>
         <Switch>
           <Route path="/" component={Home} exact />
+          <Route path="/menuitems" component={RestaurantMenu} exact/>
         </Switch>
       </Router>
     
