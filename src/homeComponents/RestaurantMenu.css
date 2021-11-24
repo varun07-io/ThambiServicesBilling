@@ -1,0 +1,39 @@
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+.flexParent {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    text-align: center;
+}
+
+.flexParent>div {
+    width: 200px;
+    min-height: 200px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.input_cart {
+    width: 50px;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+}
+
+
+/* div {
+    text-align: center;
+} */
+
+form {
+    text-align: left;
+}
+
+label {
+    text-align: left;
+}

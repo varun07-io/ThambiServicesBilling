@@ -116,7 +116,7 @@ function AllRestaurantInfo({
             }
           }).map((post, index) => (
             <PostContainer key={index}>
-              <Post className="group" href={post.url}>
+              <Post className="group" href="/menuitems">
                 <PostImage imageSrc={post.postImageSrc} />
                 <PostText>
                   <PostTitle>{post.title}</PostTitle>
