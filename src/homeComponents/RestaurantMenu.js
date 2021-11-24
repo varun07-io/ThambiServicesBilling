@@ -6,6 +6,7 @@ import { AddToCart } from "./buttons/AddToCart";
 import { RemoveCartItems } from "./buttons/RemoveCartItems";
 import tw from "twin.macro";
 import { BillingButton } from "./buttons/BillingButton";
+import { Form } from "react-bootstrap";
 
 const Card = tw.div`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0 shadow-lg p-2`;
 
@@ -133,8 +134,14 @@ function RestaurantMenu() {
 
   const cartProducts = () => (
     <div className="flexParent">
-      {cart.map((item, i) => (
-        <Card key={item.name}>
+     {cart.filter((item) => {
+            if (searchTerm == "") {
+              return item
+            } else if (item.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+              return item
+            }
+          }).map((item, i) => (
+        <Card key={i}>
           <p>{item.name}</p>
           <p>{item.category}</p>
           <p>{item.restaurantname}</p>
@@ -156,10 +163,12 @@ function RestaurantMenu() {
       ))}
     </div>
   );
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <div>
+    <Container>
       <h1 style={{fontFamily:"'Montserrat', sans-serif;", margin:"20px 0"}}>Restaurant Name</h1>
+      <Form.Control style={{margin:"20px 0"}} type="text" placeholder="Dish name" onChange={event => {setSearchTerm(event.target.value)}} />
       <Container>
         <Row>
             <Col sm={8}>{cartProducts()} </Col>
@@ -173,7 +182,7 @@ function RestaurantMenu() {
       {/*
       {cartTotals()}
       {cartProducts()} */}
-    </div>
+    </Container>
   );
 }
 

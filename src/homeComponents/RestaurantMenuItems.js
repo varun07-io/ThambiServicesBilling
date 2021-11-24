@@ -36,7 +36,7 @@ const RestaurantMenuItems = [
       inCart: false
     },
     {
-      name: "ItemFour",
+      name: "Parotta",
       category: "Starters",
       restaurantname: "Slaves",
       price: 6.99,
