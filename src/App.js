@@ -8,7 +8,7 @@ import {
 import  Home  from './homeComponents/Home.js';
 import AllRestaurantInfo from './homeComponents/AllRestaurantInfo';
 import RestaurantMenu from './homeComponents/RestaurantMenu.js';
-
+import Admin from './AdminComponent/Admin'
 
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
         <Switch>
           <Route path="/" component={Home} exact />
           <Route path="/menuitems" component={RestaurantMenu} exact/>
+          <Route path="/admin" component={Admin} exact/>
         </Switch>
       </Router>
     
