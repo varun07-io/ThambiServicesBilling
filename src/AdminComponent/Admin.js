@@ -41,6 +41,7 @@ export default function Admin(props) {
   const [menuPrice, setmenuPrice] = useState(0);
   const [inRestaurant, setinRestaurant] = useState('');
   const [manuCategory, setmanuCategory] = useState('');
+  const [deliveryBoyName, setdeliveryBoyName] = useState('');
 
   const [isSuccess, setisSuccess] = useState(false);
 
@@ -94,6 +95,25 @@ export default function Admin(props) {
       setmanuCategory('')
       setmenuPrice(0)
       setinRestaurant('')
+      setTimeout(() => {
+         setisSuccess(false) 
+      }, 2000);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+
+  const uploadDeliveryBoy = (e) => {
+    e.preventDefault();
+    let id = uuidv4();
+    let myRef =  firebase.database().ref(`/delivery/${id}`);
+    myRef.set({
+      name: deliveryBoyName
+    })
+    .then(res => {
+      setisSuccess(true)
+      setdeliveryBoyName('')
       setTimeout(() => {
          setisSuccess(false) 
       }, 2000);
@@ -174,8 +194,25 @@ export default function Admin(props) {
                     </Button>
         </Container>
         </Tab>
-        <Tab eventKey="Add Location" title="Add Location">
-           
+        <Tab eventKey="Add Delivery" title="Add Delivery Boy">
+        {isSuccess ? (
+            <Alert
+            variant='success'
+            >
+              Uploaded
+          </Alert>
+        ) : (
+          null
+        )}
+        <Container>
+              <Form.Group className="mb-3">
+                    <Form.Label>Delivery Boy Name</Form.Label>
+                    <Form.Control value={deliveryBoyName} type="text" placeholder="Enter the name" onChange={(e) => setdeliveryBoyName(e.target.value)}/>
+                    </Form.Group>  
+                    <Button variant="primary" type="submit" size="lg" onClick={uploadDeliveryBoy}>
+                          Save Restaurant
+                    </Button>
+                    </Container>
         </Tab>
       </Tabs>
       </div>
