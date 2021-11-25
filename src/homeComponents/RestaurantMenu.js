@@ -1,16 +1,37 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import RestaurantMenuItems from "./RestaurantMenuItems";
 import "./RestaurantMenu.css";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Table } from "react-bootstrap";
 import { AddToCart } from "./buttons/AddToCart";
+import firebase from 'firebase/app'
+import { initializeApp } from "firebase/app";
+import 'firebase/database'
+import 'firebase/storage'
 import { Popover } from 'react-tiny-popover'
 import { RemoveCartItems } from "./buttons/RemoveCartItems";
 import tw from "twin.macro";
 import { BillingButton } from "./buttons/BillingButton";
+import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { Form,Button } from "react-bootstrap";
 
 const Card = tw.div`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0 shadow-lg p-2`;
+const firebaseConfig = {
+  apiKey: "AIzaSyBC3HA7BlKnIiDndgCBJDDcJBhqWK1kpHg",
+  authDomain: "thambi-billing.firebaseapp.com",
+  projectId: "thambi-billing",
+  storageBucket: "thambi-billing.appspot.com",
+  messagingSenderId: "458541627224",
+  appId: "1:458541627224:web:bee668dc36998e724ed72d",
+  measurementId: "G-DFEW0H7Z0T"
+};
 
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}else {
+  firebase.app(); // if already initialized, use that one
+}
+
+const ref = React.createRef();
 
 function RestaurantMenu() {
   const [cart, setCart] = useState(RestaurantMenuItems);
@@ -173,15 +194,59 @@ function RestaurantMenu() {
   
   const [orderNumber, setorderNumber] = useState(0);
   const [todaysDate, settodaysDate] = useState(new Date().toISOString().slice(0, 10));
+  const [customerName, setcustomerName] = useState('');
+  const [customerPhone, setcustomerPhone] = useState(0);
   const [deliveryBoyName, setdeliveryBoyName] = useState('');
   const [contactNumber, setcontactNumber] = useState(0);
   const [pickup, setpickup] = useState('');
   const [drop, setdrop] = useState('');
+  const [estimatedDistance, setestimatedDistance] = useState(0);
   const [startandendKm, setstartandendKm] = useState('');
   const [billItem, setbillItem] = useState([]);
   const [billAmout, setbillAmout] = useState(0);
   const [deliveryChange, setdeliveryChange] = useState(0);
   const [otherCharges, setotherCharges] = useState(0);
+
+  const [allRestaurnats, setallRestaurnats] = useState([]);
+
+  const getAllRestaurant = () => {
+    let myRef =  firebase.database().ref(`/restaurants`).on('value', snapshot => {
+      // console.log(snapshot.val()); 
+      setallRestaurnats(snapshot.val())
+    })
+  }
+  useEffect(() => {
+    getAllRestaurant()
+  }, [])
+
+
+  const calculateDeliveryPrice = (e) => {
+    e.preventDefault();
+    setbillAmout(cartPriceTotal.toFixed(2))
+    let distance = estimatedDistance;
+    if(distance > 5){
+      let sub_distance = distance - 5;
+      let total = (sub_distance * 24) + (5 * 35)
+      setdeliveryChange(total)
+    }
+    else{
+      let sub_distance = distance * 35;
+      setdeliveryChange(sub_distance)
+    }
+  }
+
+  const styles = StyleSheet.create({
+    page: {
+      flexDirection: 'row',
+      backgroundColor: '#E4E4E4'
+    },
+    section: {
+      margin: 10,
+      padding: 10,
+      flexGrow: 1
+    }
+  });
+  
 
   return (
     <Container>
@@ -191,7 +256,7 @@ function RestaurantMenu() {
   
         >
       <h1 style={{fontFamily:"'Montserrat', sans-serif;", margin:"20px 0"}}>Enter Bill Details</h1>
-
+  
           <Form
         style={{
           marginBottom: 150
@@ -233,14 +298,14 @@ function RestaurantMenu() {
               <Col>
               <Form.Group className="mb-3">
               <Form.Label>Enter Customer Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter the customer Name" />
+              <Form.Control type="text" placeholder="Enter the customer Name"  onChange={(e) => setcustomerName(e.target.value)}/>
 
               </Form.Group>
               </Col>
               <Col>
               <Form.Group className="mb-3">
               <Form.Label>Enter Customer Phone</Form.Label>
-              <Form.Control type="number" placeholder="Enter the customer phone" />
+              <Form.Control type="number" placeholder="Enter the customer phone" onChange={(e) => setcustomerPhone(e.target.value)}/>
 
               </Form.Group>
               </Col>
@@ -251,35 +316,59 @@ function RestaurantMenu() {
             }}
             >
 
+<Table striped bordered hover>
+  <thead>
+    <tr>
+      <th>Order Number</th>
+      <th>Item Name</th>
+      <th>Item Count</th>
+      <th>Item Sub-total Rs</th>
+    </tr>
+  </thead>
+  <tbody>
+
+
                   {cart.map((item, i) => (
     <React.Fragment  key={item.name}>
       {item.inCart && (
-        <div
-        style={{
-            borderWidth:5,
-            borderRadius: 12,
-            padding:12
-        }}
-        className="flexParent"
-        >
-          <p> Item No: {i}</p>
-          <p> Item Name: {item.name}</p>
-          <p>
-            Item Count: <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "}
-            {item.count} <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button>
-          </p>
-          <p>
-            Item Subtotal: Rs-
+            <tr>
+            <td><p>{i-1}</p></td>
+            <td><p>{item.name}</p></td>
+            <td><p>
+            {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "} */}
+            {item.count} 
+            {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button> */}
+          </p></td>
+            <td>
+
+            <p>
             {Number.isInteger(item.count * item.price)
               ? item.count * item.price
               : `${(item.count * item.price).toFixed(2)}`}
           </p>
-          <RemoveCartItems buttonSize="remove--btn--medium" buttonStyle="remove--btn--outline" onClick={() => removeFromCart(i)}>Remove From Cart</RemoveCartItems>
-          <hr />
-        </div>
+            </td>
+          </tr>
+        // <div
+        // style={{
+        //     borderWidth:5,
+        //     borderRadius: 12,
+        //     padding:12
+        // }}
+        // className="flexParent"
+        // >
+          
+          
+          
+         
+        //   <RemoveCartItems buttonSize="remove--btn--medium" buttonStyle="remove--btn--outline" onClick={() => removeFromCart(i)}>Remove From Cart</RemoveCartItems>
+        //   <hr />
+        // </div>
       )}
     </React.Fragment>
   ))}
+    
+    </tbody>
+</Table>
               {
     cartCountTotal === 0 ? (
       <b>Cart is empty</b>
@@ -293,7 +382,7 @@ function RestaurantMenu() {
               ? cartPriceTotal
               : cartPriceTotal.toFixed(2)}
           </p>
-          <BillingButton onClick={() => setIsPopoverOpen(!isPopoverOpen)} buttonSize="billing--btn--medium" buttonStyle="billing--btn--outline" >Proceed for Billing</BillingButton>
+          {/* <BillingButton onClick={() => setIsPopoverOpen(!isPopoverOpen)} buttonSize="billing--btn--medium" buttonStyle="billing--btn--outline" >Proceed for Billing</BillingButton> */}
         </b>
       </>
     )}
@@ -317,9 +406,10 @@ function RestaurantMenu() {
 
     <Form.Select aria-label="Select Pick-up Location" onChange={(e) => setpickup(e.target.value)}>
   <option>Select Pick-Up Restaurant</option>
-  <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
+  {allRestaurnats && Object.entries(allRestaurnats).map(P => {
+                          // console.log(P[1].name);
+                        return <option value={P[1].name}>{P[1].name}</option>
+                        })}
 </Form.Select>
   </Form.Group>
               </Col>
@@ -327,42 +417,40 @@ function RestaurantMenu() {
               <Form.Group className="mb-3" >
     <Form.Label>Drop Location</Form.Label>
 
-    <Form.Select aria-label="Select Drop Location" onChange={(e) => setdrop(e.target.value)}>
-  <option>Select Drop Location</option>
-  <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
-</Form.Select>
+              <Form.Control type="text" onChange={(e) => setdrop(e.target.value)} placeholder="Enter the Drop Location" />
   </Form.Group>
               </Col>
-            </Row>
-           
-            <Row>
-              <Col>
-              <Form.Group className="mb-3">
-              <Form.Label>Enter Starting KM</Form.Label>
-              <Form.Control type="number" placeholder="Enter the customer phone" />
+              <Form.Group className="mb-3" >
+    <Form.Label>Enter the estimated distance</Form.Label>
 
-              </Form.Group>
-              </Col>
-              <Col>
-              <Form.Group className="mb-3">
-              <Form.Label>Enter Starting KM</Form.Label>
-              <Form.Control type="number" placeholder="Enter the customer phone" />
-
-              </Form.Group>
-              </Col>
-              <Col>
-              <Form.Group className="mb-3">
-              <Form.Label>Enter Starting KM</Form.Label>
-              <Form.Control type="number" placeholder="Enter the customer phone" />
-
-              </Form.Group>
-              </Col>
-            </Row>
-            <Button className={{alignSelf: 'center'}} variant="primary" type="submit">
+              <Form.Control type="number" onChange={(e) => setestimatedDistance(e.target.value)} placeholder="Enter the Drop Location" />
+  </Form.Group>
+  <Button style={{marginBottom:25,marginTop:15,paddingRight:15,paddingLeft:15}} variant="primary" type="submit" size="sm" onClick={calculateDeliveryPrice}>
     Calculate
   </Button>
+            </Row>
+            <Row>
+              
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Bill Amount</Form.Label>
+              <Form.Control type="number" value={billAmout} placeholder="Enter the customer phone" onChange={(e) => setbillAmout(e.target.value)} />
+              </Form.Group>
+              </Col>
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Delivery Charges</Form.Label>
+              <Form.Control type="number" value={deliveryChange} placeholder="Enter the customer phone" onChange={(e) => setdeliveryChange(e.target.value)}/>
+              </Form.Group>
+              </Col>
+              <Col>
+              <Form.Group className="mb-3">
+              <Form.Label>Other Charged</Form.Label>
+              <Form.Control type="number" value={otherCharges} placeholder="Enter the customer phone" onChange={(e) => setotherCharges(e.target.value)}/>
+              </Form.Group>
+              </Col>
+            </Row>
+ 
             </div>
             <Form.Group className="mb-3">
               <Form.Label>Enter Starting KM</Form.Label>
@@ -372,9 +460,8 @@ function RestaurantMenu() {
 
 
               <div className="d-grid gap-2">
-  <Button variant="primary" type="submit" size="lg">
-    Submit
-  </Button>
+          
+
   </div>
 </Form>
         </>
@@ -386,7 +473,9 @@ function RestaurantMenu() {
 
       </div>
       <h1 style={{fontFamily:"'Montserrat', sans-serif;", margin:"20px 0"}}>Search Menu</h1>
-
+      
+    
+  
       <Form.Control style={{margin:"20px 0"}} type="text" placeholder="Dish name" onChange={event => {setSearchTerm(event.target.value)}} />
       <Container>
         <Row>
