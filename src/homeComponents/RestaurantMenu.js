@@ -1,10 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import RestaurantMenuItems from "./RestaurantMenuItems";
 import "./RestaurantMenu.css";
 import { Container, Row, Col, Table } from "react-bootstrap";
 import { AddToCart } from "./buttons/AddToCart";
 import firebase from 'firebase/app'
 import { initializeApp } from "firebase/app";
+import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 import 'firebase/database'
 import 'firebase/storage'
 import { Popover } from 'react-tiny-popover'
@@ -206,6 +207,7 @@ function RestaurantMenu() {
   const [billAmout, setbillAmout] = useState(0);
   const [deliveryChange, setdeliveryChange] = useState(0);
   const [otherCharges, setotherCharges] = useState(0);
+  const [grandTotal, setgrandTotal] = useState(0);
 
   const [allRestaurnats, setallRestaurnats] = useState([]);
 
@@ -222,16 +224,25 @@ function RestaurantMenu() {
 
   const calculateDeliveryPrice = (e) => {
     e.preventDefault();
+
     setbillAmout(cartPriceTotal.toFixed(2))
     let distance = estimatedDistance;
     if(distance > 5){
       let sub_distance = distance - 5;
       let total = (sub_distance * 24) + (5 * 35)
       setdeliveryChange(total)
+      let grand_total = (total + parseFloat(cartPriceTotal.toFixed(2)) + parseInt(otherCharges))
+      console.log("grand Total - ",total + parseFloat(cartPriceTotal.toFixed(2)) + parseInt(otherCharges));
+    setgrandTotal(grand_total)
+
     }
     else{
       let sub_distance = distance * 35;
       setdeliveryChange(sub_distance)
+      let grand_total = (sub_distance + parseFloat(cartPriceTotal.toFixed(2)) + parseInt(otherCharges))
+
+    setgrandTotal(grand_total)
+
     }
   }
 
@@ -246,17 +257,112 @@ function RestaurantMenu() {
       flexGrow: 1
     }
   });
-  
 
-  return (
-    <Container>
-      {isPopoverOpen ? (
+  const ComponentToPrint = React.forwardRef((props, ref) => (
+    <div ref={ref}>
+      <p>
+        Order No: {orderNumber}
+      </p>
+      <p>
+        Date {todaysDate}
+      </p>
+      <p>
+        Name {customerName}
+      </p>
+      <p>
+        Phone {customerPhone}
+      </p>
+      
+      <p>
+        Delivery By {deliveryBoyName}
+      </p>
+      
+      <Table striped bordered hover>
+  <thead>
+    <tr>
+      <th>Order Number</th>
+      <th>Item Name</th>
+      <th>Item Count</th>
+      <th>Item Sub-total Rs</th>
+    </tr>
+  </thead>
+  <tbody>
+
+
+                  {cart.map((item, i) => (
+    <React.Fragment  key={item.name}>
+      {item.inCart && (
+            <tr>
+            <td><p>{i-1}</p></td>
+            <td><p>{item.name}</p></td>
+            <td><p>
+            {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "} */}
+            {item.count} 
+            {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button> */}
+          </p></td>
+            <td>
+
+            <p>
+            {Number.isInteger(item.count * item.price)
+              ? item.count * item.price
+              : `${(item.count * item.price).toFixed(2)}`}
+          </p>
+            </td>
+          </tr>
+        // <div
+        // style={{
+        //     borderWidth:5,
+        //     borderRadius: 12,
+        //     padding:12
+        // }}
+        // className="flexParent"
+        // >
+          
+          
+          
+         
+        //   <RemoveCartItems buttonSize="remove--btn--medium" buttonStyle="remove--btn--outline" onClick={() => removeFromCart(i)}>Remove From Cart</RemoveCartItems>
+        //   <hr />
+        // </div>
+      )}
+    </React.Fragment>
+  ))}
+    
+    </tbody>
+</Table>
+
+              <p>
+                Pick-up: {pickup}
+              </p>
+              <p>
+                Drop Location {drop}
+              </p>
+              <p>
+                Restaurant Bill amount: {billAmout}
+              </p>
+              <p>
+                Delivery Amount {deliveryChange}
+              </p>
+              <p>
+                Total: {grandTotal}
+              </p>
+    </div>
+  ));
+
+
+  const componentRef = useRef();
+
+
+  const enterBillDetails = () => 
+  {
+    return(
+    
 
         <
   
         >
       <h1 style={{fontFamily:"'Montserrat', sans-serif;", margin:"20px 0"}}>Enter Bill Details</h1>
-  
+
           <Form
         style={{
           marginBottom: 150
@@ -267,7 +373,7 @@ function RestaurantMenu() {
               <Col>
               <Form.Group className="mb-3" >
               <Form.Label>Enter the Order Number</Form.Label>
-              <Form.Control type="number" placeholder="Enter the order number" />
+              <Form.Control type="number" value={orderNumber} placeholder="Enter the order number" onChange={(e) => setorderNumber(e.target.value)}/>
 
               </Form.Group>
               </Col>
@@ -404,7 +510,7 @@ function RestaurantMenu() {
               <Form.Group className="mb-3" >
     <Form.Label>Pick-Up Location</Form.Label>
 
-    <Form.Select aria-label="Select Pick-up Location" onChange={(e) => setpickup(e.target.value)}>
+    <Form.Select aria-label="Select Pick-up Location" value={pickup} onChange={(e) => setpickup(e.target.value)}>
   <option>Select Pick-Up Restaurant</option>
   {allRestaurnats && Object.entries(allRestaurnats).map(P => {
                           // console.log(P[1].name);
@@ -417,7 +523,7 @@ function RestaurantMenu() {
               <Form.Group className="mb-3" >
     <Form.Label>Drop Location</Form.Label>
 
-              <Form.Control type="text" onChange={(e) => setdrop(e.target.value)} placeholder="Enter the Drop Location" />
+              <Form.Control type="text" onChange={(e) => setdrop(e.target.value)} value={drop} placeholder="Enter the Drop Location" />
   </Form.Group>
               </Col>
               <Form.Group className="mb-3" >
@@ -465,12 +571,44 @@ function RestaurantMenu() {
   </div>
 </Form>
         </>
-      ) : (
-        null
-      )}
+    
+    )
+  }
+
+  const viewGenerateBillDetails = () => {
+    return(
+      <React.Fragment>
+      <ComponentToPrint ref={componentRef} />
+      <button onClick={() => exportComponentAsJPEG(componentRef)}>
+        Export As JPEG
+      </button>
+      <button onClick={() => exportComponentAsPDF(componentRef)}>
+        Export As PDF
+      </button>
+      <button onClick={() => exportComponentAsPNG(componentRef)}>
+        Export As PNG
+      </button>
+    </React.Fragment>
+    )
+  }
+
+
+  return (
+    <Container>
+ 
   
       <div>
-
+        {isPopoverOpen ? (
+      <Container>
+      <Row>
+          <Col sm={8}>{enterBillDetails()} </Col>
+          <Col sm={4}>
+         {viewGenerateBillDetails()}</Col>
+      </Row>
+      </Container>
+        ) : (
+          null
+        )}
       </div>
       <h1 style={{fontFamily:"'Montserrat', sans-serif;", margin:"20px 0"}}>Search Menu</h1>
       
