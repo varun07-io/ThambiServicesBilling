@@ -112,7 +112,7 @@ const AllRestaurantInfo = () => {
             }
           }).map((post, index) => (
             <PostContainer key={index}>
-              <Post className="group" href="/menuitems">
+              <Post className="group" href={`/menuitems/${post.name.toString().replace(/\s/g, "")}`}>
                 <PostImage  />
                 <PostText>
                   <PostTitle>{post.name}</PostTitle>

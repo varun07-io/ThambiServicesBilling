@@ -7,6 +7,7 @@ import firebase from 'firebase/app'
 import { initializeApp } from "firebase/app";
 import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 import 'firebase/database'
+import { useParams } from 'react-router-dom';
 import 'firebase/storage'
 import { Popover } from 'react-tiny-popover'
 import { RemoveCartItems } from "./buttons/RemoveCartItems";
@@ -35,9 +36,26 @@ if (!firebase.apps.length) {
 const ref = React.createRef();
 
 function RestaurantMenu() {
-  const [cart, setCart] = useState(RestaurantMenuItems);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
+  const { name } = useParams();
+
+  const [allMenuFromAskedRestaurants, setallMenuFromAskedRestaurants] = useState([]);
+  
+  const getAllMenus = () => {
+    let myRef =  firebase.database().ref(`/menu`).orderByChild("restaurant").equalTo(name).on('value', snapshot => {
+      let temp_menu = []
+      snapshot.forEach((t) => {
+        temp_menu.push(t.val())
+      })
+      console.log(temp_menu);
+      setCart(temp_menu)
+    })
+  }
+  useEffect(() => {
+      getAllMenus()
+  }, [])
+  const [cart, setCart] = useState(allMenuFromAskedRestaurants);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const addToCart = i => {
     setCart(prevState =>
@@ -159,7 +177,7 @@ function RestaurantMenu() {
 
   const cartProducts = () => (
     <div className="flexParent">
-     {cart.filter((item) => {
+     {cart && cart.filter((item) => {
             if (searchTerm == "") {
               return item
             } else if (item.name.toLowerCase().includes(searchTerm.toLowerCase())) {
