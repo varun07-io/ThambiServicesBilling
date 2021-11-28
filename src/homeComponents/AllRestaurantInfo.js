@@ -1,10 +1,14 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro";
 import { Form } from "react-bootstrap"; 
-
+import firebase from 'firebase/app'
+import { initializeApp } from "firebase/app";
+import 'firebase/database'
+import 'firebase/storage'
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -64,68 +68,60 @@ const PostContainer = styled.div`
 `;
 
 
-function AllRestaurantInfo({
-  
-  // subheading = "",
-  heading = "All Restaurant Details",
-  // description = "",
-  posts = [
-    {
-      postImageSrc:
-        "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "slaves",
-      authorName: "Aaron Patterson",
-    },
-    {
-      postImageSrc:
-        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "Annapoorna",
-      authorName: "Sam Phipphen",
-    },
-    {
-      postImageSrc:
-        "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "hotel theDot",
-      authorName: "Tony Hawk",
-    },
-    {
-      postImageSrc:
-        "https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "Suren Mess",
-      authorName: "Himali Turn",
-    }
-  ]
- }) {
+
+
+
+const AllRestaurantInfo = () => {
+
+ {
   const [searchTerm, setSearchTerm] = useState("");
+  const [posts, setposts] = useState([]);
+
+
+  
+  const getAllRestaurant = () => {
+    let myRef =  firebase.database().ref(`/restaurants`).on('value', snapshot => {
+      let temp_posts = []
+      snapshot.forEach((t) => {
+        temp_posts.push(t.val())
+      })
+      console.log(temp_posts);
+      setposts(temp_posts)
+    })
+  }
+  useEffect(() => {
+    getAllRestaurant()
+  }, [])
 
   return (
     <Container>
       <ContentWithPaddingXl>
         <HeadingContainer>
           {/* {subheading && <Subheading>{subheading}</Subheading>} */}
-          {heading && <Heading>{heading}</Heading>}
+          <Heading>Search Restaurants</Heading>
           <Form.Control type="text" placeholder="Search Restaurants" onChange={event => {setSearchTerm(event.target.value)}} />
           {/* {description && <Description>{description}</Description>} */}
         </HeadingContainer>
         <Posts>
-          {posts.filter((post) => {
+          {posts && posts.filter((post) => {
+          console.log("Posts : ",post)
             if (searchTerm == "") {
               return post
-            } else if (post.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+            } else if (post.name.toLowerCase().includes(searchTerm.toLowerCase())) {
               return post
             }
           }).map((post, index) => (
             <PostContainer key={index}>
               <Post className="group" href="/menuitems">
-                <PostImage imageSrc={post.postImageSrc} />
+                <PostImage  />
                 <PostText>
-                  <PostTitle>{post.title}</PostTitle>
+                  <PostTitle>{post.name}</PostTitle>
                   {post.featured && <PostDescription>{post.description}</PostDescription>}
                   <AuthorInfo>
-                    {post.featured && <AuthorImage src={post.authorImageSrc} />}
+                    {/* {post.featured && <AuthorImage src={post.authorImageSrc} />} */}
                     <AuthorTextInfo>
-                      <AuthorName>{post.authorName}</AuthorName>
-                      {post.featured && <AuthorProfile>{post.authorProfile}</AuthorProfile>}
+                      <AuthorName>{post.location}</AuthorName>
+                      {/* {post.featured && <AuthorProfile>{post.authorProfile}</AuthorProfile>} */}
                     </AuthorTextInfo>
                   </AuthorInfo>
                 </PostText>
@@ -139,5 +135,6 @@ function AllRestaurantInfo({
     
   );
 };
+}
 
 export default AllRestaurantInfo;
