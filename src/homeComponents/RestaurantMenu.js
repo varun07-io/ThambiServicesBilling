@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useRef } from "react";
 import RestaurantMenuItems from "./RestaurantMenuItems";
 import "./RestaurantMenu.css";
-import { Container, Row, Col, Table } from "react-bootstrap";
+import { Container, Row, Col, Table,Spinner } from "react-bootstrap";
 import { AddToCart } from "./buttons/AddToCart";
 import firebase from 'firebase/app'
 import { initializeApp } from "firebase/app";
@@ -9,6 +9,8 @@ import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } fro
 import 'firebase/database'
 import { useParams } from 'react-router-dom';
 import 'firebase/storage'
+import LoadingCard from "./LoadingCard";
+
 import { Popover } from 'react-tiny-popover'
 import { RemoveCartItems } from "./buttons/RemoveCartItems";
 import tw from "twin.macro";
@@ -39,9 +41,14 @@ function RestaurantMenu() {
 
   const { name } = useParams();
 
+
+
+
   const [allMenuFromAskedRestaurants, setallMenuFromAskedRestaurants] = useState([]);
+  const [isLoading, setisLoading] = useState(false)
   
   const getAllMenus = () => {
+    setisLoading(true)
     let myRef =  firebase.database().ref(`/menu`).orderByChild("restaurant").equalTo(name).on('value', snapshot => {
       let temp_menu = []
       snapshot.forEach((t) => {
@@ -49,6 +56,7 @@ function RestaurantMenu() {
       })
       console.log(temp_menu);
       setCart(temp_menu)
+      setisLoading(false)
     })
   }
   useEffect(() => {
@@ -56,6 +64,29 @@ function RestaurantMenu() {
   }, [])
   const [cart, setCart] = useState(allMenuFromAskedRestaurants);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+
+  const isLoadingSection = () => {
+    if(isLoading){
+      return(
+          <div
+          style={{
+            marginTop:55
+          }}
+          >
+             <Spinner animation="grow" variant="primary" />
+  <Spinner animation="grow" variant="success" />
+  <Spinner animation="grow" variant="danger" />
+  <Spinner animation="grow" variant="warning" />
+  <p>Loading..</p>
+  <Spinner animation="grow" variant="info" />
+  <Spinner animation="grow" variant="light" />
+  <Spinner animation="grow" variant="dark" />
+          </div>
+      )
+    }
+  }
+
+
 
   const addToCart = i => {
     setCart(prevState =>
@@ -177,6 +208,7 @@ function RestaurantMenu() {
 
   const cartProducts = () => (
     <div className="flexParent">
+      {isLoadingSection()}
      {cart && cart.filter((item) => {
             if (searchTerm == "") {
               return item

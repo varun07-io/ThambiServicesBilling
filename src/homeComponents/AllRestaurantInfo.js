@@ -1,5 +1,7 @@
 import React from "react";
 import { useState,useEffect } from "react";
+import {Spinner } from "react-bootstrap";
+
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro";
@@ -78,8 +80,11 @@ const AllRestaurantInfo = () => {
   const [posts, setposts] = useState([]);
 
 
+  const [isLoading, setisLoading] = useState(false)
   
   const getAllRestaurant = () => {
+    setisLoading(true)
+
     let myRef =  firebase.database().ref(`/restaurants`).on('value', snapshot => {
       let temp_posts = []
       snapshot.forEach((t) => {
@@ -87,11 +92,35 @@ const AllRestaurantInfo = () => {
       })
       console.log(temp_posts);
       setposts(temp_posts)
+      setisLoading(false)
+      
     })
   }
   useEffect(() => {
     getAllRestaurant()
   }, [])
+
+  const isLoadingSection = () => {
+    if(isLoading){
+      return(
+          <div
+          style={{
+            marginTop:155,
+            alignSelf:'center'
+          }}
+          >
+             <Spinner animation="grow" variant="primary" />
+  <Spinner animation="grow" variant="success" />
+  <Spinner animation="grow" variant="danger" />
+  <Spinner animation="grow" variant="warning" />
+  <p>Loading..</p>
+  <Spinner animation="grow" variant="info" />
+  <Spinner animation="grow" variant="light" />
+  <Spinner animation="grow" variant="dark" />
+          </div>
+      )
+    }
+  }
 
   return (
     <Container>
@@ -103,6 +132,7 @@ const AllRestaurantInfo = () => {
           {/* {description && <Description>{description}</Description>} */}
         </HeadingContainer>
         <Posts>
+        {isLoadingSection()}
           {posts && posts.filter((post) => {
           console.log("Posts : ",post)
             if (searchTerm == "") {
