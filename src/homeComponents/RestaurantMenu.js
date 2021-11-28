@@ -33,11 +33,11 @@ function RestaurantMenu() {
     setCart(prevCart =>
       prevCart.map((item, o) => {
         if (i === o && item.inCart) {
-          if (item.count > 9) {
+          if (item.count > 100) {
             return item;
           } else return { ...item, count: item.count + 1 };
         } else if (i === o) {
-          if (item.counterVal > 9) {
+          if (item.counterVal > 100) {
             return item;
           } else
             return {
