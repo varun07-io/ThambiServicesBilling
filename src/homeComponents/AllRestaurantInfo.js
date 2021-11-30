@@ -11,6 +11,7 @@ import { initializeApp } from "firebase/app";
 import 'firebase/database'
 import 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid';
+import './AllRestaurantInfo.css'
 
 
 
@@ -21,10 +22,10 @@ const Heading = tw(SectionHeading)``;
 const SectionDescription = tw.p`mt-4 text-sm md:text-base lg:text-lg font-medium leading-relaxed text-gray-100 max-w-xl`;
 
 const Description = tw(SectionDescription)`mx-auto`;
-const Container = tw.div`relative`;
-const ContentWithPaddingXl= tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
+const Container = tw.div`relative min-h-screen`;
+const ContentWithPaddingXl= tw.div`max-w-screen-xl mx-auto py-5 lg:py-5`;
 const Subheading = tw.h5`font-bold text-gray-500`
-const Posts = tw.div`mt-12 flex flex-wrap -mr-3 relative`;
+const Posts = tw.div`mt-12 flex flex-wrap -mr-3 relative justify-center items-center`;
 
 const Post = tw.a`flex flex-col h-full bg-gray-200 rounded`;
 const PostImage = styled.div`
@@ -54,9 +55,7 @@ const PostContainer = styled.div`
     ${PostText} {
       ${tw`pl-8 pr-5`}
     }
-    ${PostTitle} {
-      ${tw`text-2xl`}
-    }
+    
     ${PostDescription} {
       ${tw`mt-4 text-sm font-semibold text-gray-600 leading-relaxed`}
     }
@@ -64,7 +63,7 @@ const PostContainer = styled.div`
       ${tw`mt-8 flex items-center`}
     }
     ${AuthorName} {
-      ${tw`mt-0 font-bold text-gray-700 text-sm`}
+      ${tw`mt-0 font-bold text-gray-700 no-underline`}
     }
   `}
 `;
@@ -103,32 +102,21 @@ const AllRestaurantInfo = () => {
   const isLoadingSection = () => {
     if(isLoading){
       return(
-          <div
-          style={{
-            marginTop:155,
-            alignSelf:'center'
-          }}
-          >
-             <Spinner animation="grow" variant="primary" />
-  <Spinner animation="grow" variant="success" />
-  <Spinner animation="grow" variant="danger" />
-  <Spinner animation="grow" variant="warning" />
-  <p>Loading..</p>
-  <Spinner animation="grow" variant="info" />
-  <Spinner animation="grow" variant="light" />
-  <Spinner animation="grow" variant="dark" />
-          </div>
+        <div className="loading">
+          <div></div>
+          <div></div>
+        </div> 
       )
     }
   }
 
   return (
-    <Container>
+    <Container style={{backgroundColor:"#DDBEBE"}}>
       <ContentWithPaddingXl>
         <HeadingContainer>
           {/* {subheading && <Subheading>{subheading}</Subheading>} */}
-          <Heading>Search Restaurants</Heading>
-          <Form.Control type="text" placeholder="Search Restaurants" onChange={event => {setSearchTerm(event.target.value)}} />
+          <p style={{textAlign:"center"}}>(search with restaurant name)</p>
+          <Form.Control style={{borderRadius:"1rem"}} type="text" placeholder="Search Restaurants" onChange={event => {setSearchTerm(event.target.value)}} />
           {/* {description && <Description>{description}</Description>} */}
         </HeadingContainer>
         <Posts>
@@ -141,16 +129,16 @@ const AllRestaurantInfo = () => {
               return post
             }
           }).map((post, index) => (
-            <PostContainer key={index}>
+            <PostContainer key={index} >
               <Post className="group" href={`/menuitems/${post.name.toString().replace(/\s/g, "")}`}>
                 <PostImage  />
                 <PostText>
-                  <PostTitle>{post.name}</PostTitle>
+                  <PostTitle style={{fontSize:"1.5rem"}}>{post.name}</PostTitle>                  
                   {post.featured && <PostDescription>{post.description}</PostDescription>}
                   <AuthorInfo>
                     {/* {post.featured && <AuthorImage src={post.authorImageSrc} />} */}
                     <AuthorTextInfo>
-                      <AuthorName>{post.location}</AuthorName>
+                      <AuthorName style={{fontSize:"1.2rem", textDecoration:"none"}}>{post.location}</AuthorName>
                       {/* {post.featured && <AuthorProfile>{post.authorProfile}</AuthorProfile>} */}
                     </AuthorTextInfo>
                   </AuthorInfo>

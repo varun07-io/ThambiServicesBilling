@@ -1,39 +1,101 @@
 * {
-    font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .flexParent {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    text-align: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  text-align: center;
 }
 
-.flexParent>div {
-    width: 200px;
-    min-height: 200px;
-    margin: 10px;
-    border-radius: 10px;
+.flexParent > div {
+  width: 200px;
+  min-height: 200px;
+  margin: 10px;
+  border-radius: 10px;
 }
 
 .input_cart {
-    width: 50px;
-    text-align: center;
+  width: 50px;
+  text-align: center;
 }
 
 h1 {
-    text-align: center;
+  text-align: center;
 }
-
 
 /* div {
     text-align: center;
 } */
 
 form {
-    text-align: left;
+  text-align: left;
 }
 
 label {
-    text-align: left;
+  text-align: left;
+}
+
+.export--button {
+  background-color: #2c272e;
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 15px;
+  border: 1px solid #2c272e;
+  transition: all 0.3s ease-out;
+  background-color: #2c272e;
+  color: #fff;
+  margin-top: 20px;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
+  margin-left: 20px;
+}
+.export--button:hover {
+  background: #fff;
+  color: #242424;
+  transition: all 0.3s ease-out;
+}
+
+@keyframes bg {
+  0% {
+    background: #000;
+  }
+  100% {
+    background: #fff;
+  }
+}
+
+.loading {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.loading div {
+  position: absolute;
+  background: #6c4a4a;
+  opacity: 1;
+  border-radius: 50%;
+  animation: loading 1.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.loading div:nth-child(2) {
+  animation-delay: -0.7s;
+}
+@keyframes loading {
+  0% {
+    top: 28px;
+    left: 28px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: -1px;
+    left: -1px;
+    width: 58px;
+    height: 58px;
+    opacity: 0;
+  }
 }
