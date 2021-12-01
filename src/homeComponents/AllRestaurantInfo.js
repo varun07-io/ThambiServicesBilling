@@ -111,7 +111,7 @@ const AllRestaurantInfo = () => {
   }
 
   return (
-    <Container style={{backgroundColor:"#DDBEBE"}}>
+    <Container style={{backgroundColor:"#DDBEBE",marginTop:55}}>
       <ContentWithPaddingXl>
         <HeadingContainer>
           {/* {subheading && <Subheading>{subheading}</Subheading>} */}
