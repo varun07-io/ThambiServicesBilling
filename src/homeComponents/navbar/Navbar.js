@@ -3,9 +3,9 @@ import './Navbar.css'
 
 function Navbar1() {
     return(
-      <div className="main--nav">
-        <h2>Thambi Services(Billing)</h2>
-      </div>
+        <div className="main--nav">
+            <h2 style={{fontWeight:"800" }}>Thambi Services (billing)</h2>
+        </div>
     )
 }
 

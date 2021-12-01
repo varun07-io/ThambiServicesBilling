@@ -1,5 +1,6 @@
 import React, { useState,useEffect,useRef } from "react";
 import RestaurantMenuItems from "./RestaurantMenuItems";
+import { useHistory } from "react-router-dom";
 import "./RestaurantMenu.css";
 import { Container, Row, Col, Table,Spinner } from "react-bootstrap";
 import { AddToCart } from "./buttons/AddToCart";
@@ -303,13 +304,14 @@ function RestaurantMenu() {
   });
 
   const ComponentToPrint = React.forwardRef((props, ref) => (
-    <div ref={ref} style={{padding:"1rem", backgroundColor:"#fff", fontWeight:"800", fontSize:"0.8rem"}} >
+    <div ref={ref} style={{padding:"1rem", backgroundColor:"#fff", fontWeight:"800", fontSize:"0.8rem", width:"360px"}} >
+      <div style={{padding:"5px", border:"2px solid #131313"}}>
       <h2 style={{fontWeight:"800", textAlign:"center", fontSize:"1.3rem"}}>Thambi Services</h2>
       <p style={{textAlign:"center", fontSize:"0.6rem"}}>55, Pollachi Main Road No.10 Shopping Mall Near Dorais Theatre Mahalingapuram, Pollachi, Tamil Nadu 642002.</p>
       <Row>
         <Col>
         <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
-        Order No: {orderNumber}
+        Order ID: {orderNumber}
       </p></Col>
       <Col>
       <p style={{fontWeight:"800", display:"flex", justifySelf:"flex-end", fontSize:"0.8rem" }}>
@@ -398,6 +400,7 @@ function RestaurantMenu() {
               <p style={{fontWeight:"800", fontSize:"1rem"}}>
                 Total: {grandTotal}
               </p>
+              </div>
     </div>
   ));
 
@@ -644,6 +647,7 @@ function RestaurantMenu() {
     )
   }
 
+  let history = useHistory();
 
   return (
     <ContainerC style={{backgroundColor:"#DDBEBE"}}>
@@ -653,7 +657,9 @@ function RestaurantMenu() {
   
       <div>
         {isPopoverOpen ? (
+          
       <Container>
+        <button onClick={() => history.goBack()} className="back--button">Back</button>
       <Row>
           <Col sm={8}>{enterBillDetails()} </Col>
           <Col sm={4}>
@@ -663,14 +669,16 @@ function RestaurantMenu() {
         ) : (
           null
         )}
-      </div>
-      <p style={{textAlign:"center"}}>(search with dish name)</p>
+        {isPopoverOpen ? (null) : (<button onClick={() => history.goBack()} className="back--button">Back</button>)}
+         
+          <p style={{textAlign:"center"}}>(search with dish name)</p>
       
     
   
       <Form.Control  style={{borderRadius:"1.5rem"}} type="text" placeholder="Dish name" onChange={event => {setSearchTerm(event.target.value)}} />
       <ContentWithPaddingXlC>
         <Container>
+          
           <Row>
               <Col sm={8}>{cartProducts()} </Col>
               <Col sm={4}>
@@ -678,6 +686,8 @@ function RestaurantMenu() {
           </Row>
           </Container>
         </ContentWithPaddingXlC>
+      </div>
+      
      
       </ContentWithPaddingXlC>
     </ContainerC>
