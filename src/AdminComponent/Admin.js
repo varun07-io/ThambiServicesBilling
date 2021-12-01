@@ -87,7 +87,7 @@ export default function Admin(props) {
       name: menuName,
       category: manuCategory,
       price: menuPrice,
-      restaurant: inRestaurant,
+      restaurant: inRestaurant.toString().replace(/\s/g, ""),
       count: 0,
       counterVal: 1,
       inCart: false
