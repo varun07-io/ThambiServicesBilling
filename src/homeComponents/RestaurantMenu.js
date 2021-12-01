@@ -19,6 +19,10 @@ import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { Form,Button } from "react-bootstrap";
 
 const Card = tw.div`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0 shadow-lg p-2`;
+const ContainerC = tw.div`relative min-h-screen`;
+const ContentWithPaddingXlC= tw.div`max-w-screen-xl mx-auto py-5 lg:py-5`;
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyBC3HA7BlKnIiDndgCBJDDcJBhqWK1kpHg",
   authDomain: "thambi-billing.firebaseapp.com",
@@ -68,20 +72,10 @@ function RestaurantMenu() {
   const isLoadingSection = () => {
     if(isLoading){
       return(
-          <div
-          style={{
-            marginTop:55
-          }}
-          >
-             <Spinner animation="grow" variant="primary" />
-  <Spinner animation="grow" variant="success" />
-  <Spinner animation="grow" variant="danger" />
-  <Spinner animation="grow" variant="warning" />
-  <p>Loading..</p>
-  <Spinner animation="grow" variant="info" />
-  <Spinner animation="grow" variant="light" />
-  <Spinner animation="grow" variant="dark" />
-          </div>
+        <div className="loading">
+          <div></div>
+          <div></div>
+         </div> 
       )
     }
   }
@@ -107,11 +101,11 @@ function RestaurantMenu() {
     setCart(prevCart =>
       prevCart.map((item, o) => {
         if (i === o && item.inCart) {
-          if (item.count > 9) {
+          if (item.count > 100) {
             return item;
           } else return { ...item, count: item.count + 1 };
         } else if (i === o) {
-          if (item.counterVal > 9) {
+          if (item.counterVal > 100) {
             return item;
           } else
             return {
@@ -188,12 +182,12 @@ function RestaurantMenu() {
     <React.Fragment  key={item.name}>
       {item.inCart && (
         <>
-          <p> Item Name: {item.name}</p>
-          <p>
+          <p style={{fontWeight:"800"}}> Item Name: {item.name}</p>
+          <p style={{fontWeight:"800"}}>
             Item Count: <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "}
             {item.count} <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button>
           </p>
-          <p>
+          <p style={{fontWeight:"800"}}>
             Item Subtotal: Rs-
             {Number.isInteger(item.count * item.price)
               ? item.count * item.price
@@ -309,91 +303,99 @@ function RestaurantMenu() {
   });
 
   const ComponentToPrint = React.forwardRef((props, ref) => (
-    <div ref={ref}>
-      <p>
+    <div ref={ref} style={{padding:"1rem", backgroundColor:"#fff", fontWeight:"800", fontSize:"0.8rem"}} >
+      <h2 style={{fontWeight:"800", textAlign:"center", fontSize:"1.3rem"}}>Thambi Services</h2>
+      <p style={{textAlign:"center", fontSize:"0.6rem"}}>55, Pollachi Main Road No.10 Shopping Mall Near Dorais Theatre Mahalingapuram, Pollachi, Tamil Nadu 642002.</p>
+      <Row>
+        <Col>
+        <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
         Order No: {orderNumber}
+      </p></Col>
+      <Col>
+      <p style={{fontWeight:"800", display:"flex", justifySelf:"flex-end", fontSize:"0.8rem" }}>
+        Date: {todaysDate}
+      </p></Col>
+      </Row>
+      <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
+        Name: {customerName}
       </p>
-      <p>
-        Date {todaysDate}
-      </p>
-      <p>
-        Name {customerName}
-      </p>
-      <p>
-        Phone {customerPhone}
-      </p>
-      
-      <p>
-        Delivery By {deliveryBoyName}
+      <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
+        Phone: {customerPhone}
       </p>
       
-      <Table striped bordered hover>
-  <thead>
-    <tr>
-      <th>Order Number</th>
-      <th>Item Name</th>
-      <th>Item Count</th>
-      <th>Item Sub-total Rs</th>
-    </tr>
-  </thead>
-  <tbody>
-
-
-                  {cart.map((item, i) => (
-    <React.Fragment  key={item.name}>
-      {item.inCart && (
-            <tr>
-            <td><p>{i-1}</p></td>
-            <td><p>{item.name}</p></td>
-            <td><p>
-            {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "} */}
-            {item.count} 
-            {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button> */}
-          </p></td>
-            <td>
-
-            <p>
-            {Number.isInteger(item.count * item.price)
-              ? item.count * item.price
-              : `${(item.count * item.price).toFixed(2)}`}
-          </p>
-            </td>
+      <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
+        Delivery By: {deliveryBoyName}
+      </p>
+      
+      <Table>
+        <thead>
+          <tr>
+            <th>Order no.</th>
+            <th>Name</th>
+            <th>Qty.</th>
+            <th>Total Amnt.</th>
           </tr>
-        // <div
-        // style={{
-        //     borderWidth:5,
-        //     borderRadius: 12,
-        //     padding:12
-        // }}
-        // className="flexParent"
-        // >
-          
-          
-          
-         
-        //   <RemoveCartItems buttonSize="remove--btn--medium" buttonStyle="remove--btn--outline" onClick={() => removeFromCart(i)}>Remove From Cart</RemoveCartItems>
-        //   <hr />
-        // </div>
-      )}
-    </React.Fragment>
-  ))}
-    
-    </tbody>
-</Table>
+        </thead>
+        <tbody>
 
-              <p>
+
+                        {cart.map((item, i) => (
+          <React.Fragment  key={item.name}>
+            {item.inCart && (
+                  <tr>
+                  <td><p>{i-1}</p></td>
+                  <td><p>{item.name}</p></td>
+                  <td><p>
+                  {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "} */}
+                  {item.count} 
+                  {/* <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button> */}
+                </p></td>
+                  <td>
+
+                  <p>
+                  {Number.isInteger(item.count * item.price)
+                    ? item.count * item.price
+                    : `${(item.count * item.price).toFixed(2)}`}
+                </p>
+                  </td>
+                </tr>
+              // <div
+              // style={{
+              //     borderWidth:5,
+              //     borderRadius: 12,
+              //     padding:12
+              // }}
+              // className="flexParent"
+              // >
+                
+                
+                
+              
+              //   <RemoveCartItems buttonSize="remove--btn--medium" buttonStyle="remove--btn--outline" onClick={() => removeFromCart(i)}>Remove From Cart</RemoveCartItems>
+              //   <hr />
+              // </div>
+            )}
+          </React.Fragment>
+        ))}
+          
+          </tbody>
+      </Table>
+
+              <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
                 Pick-up: {pickup}
               </p>
-              <p>
-                Drop Location {drop}
+              <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
+                Drop Location: {drop}
               </p>
-              <p>
+              <hr />
+              <p style={{fontWeight:"800", fontSize:"0.7rem"}}>
                 Restaurant Bill amount: {billAmout}
               </p>
-              <p>
-                Delivery Amount {deliveryChange}
+              <p style={{fontWeight:"800", fontSize:"0.7rem"}}>
+                Delivery Amount: {deliveryChange}
               </p>
-              <p>
+              <hr />
+              <p style={{fontWeight:"800", fontSize:"1rem"}}>
                 Total: {grandTotal}
               </p>
     </div>
@@ -629,13 +631,13 @@ function RestaurantMenu() {
     return(
       <React.Fragment>
       <ComponentToPrint ref={componentRef} />
-      <button onClick={() => exportComponentAsJPEG(componentRef)}>
+      <button onClick={() => exportComponentAsJPEG(componentRef)} className="export--button">
         Export As JPEG
       </button>
-      <button onClick={() => exportComponentAsPDF(componentRef)}>
+      <button onClick={() => exportComponentAsPDF(componentRef)} className="export--button">
         Export As PDF
       </button>
-      <button onClick={() => exportComponentAsPNG(componentRef)}>
+      <button onClick={() => exportComponentAsPNG(componentRef)} className="export--button">
         Export As PNG
       </button>
     </React.Fragment>
@@ -644,8 +646,10 @@ function RestaurantMenu() {
 
 
   return (
-    <Container>
- 
+    <ContainerC style={{backgroundColor:"#DDBEBE"}}>
+      <ContentWithPaddingXlC>
+
+
   
       <div>
         {isPopoverOpen ? (
@@ -660,25 +664,23 @@ function RestaurantMenu() {
           null
         )}
       </div>
-      <h1 style={{fontFamily:"'Montserrat', sans-serif;", margin:"20px 0"}}>Search Menu</h1>
+      <p style={{textAlign:"center"}}>(search with dish name)</p>
       
     
   
-      <Form.Control style={{margin:"20px 0"}} type="text" placeholder="Dish name" onChange={event => {setSearchTerm(event.target.value)}} />
-      <Container>
-        <Row>
-            <Col sm={8}>{cartProducts()} </Col>
-            <Col sm={4}>
-             {cartItems} {cartTotals()}</Col>
-        </Row>
-        </Container>
-      
-      
-      
-      {/*
-      {cartTotals()}
-      {cartProducts()} */}
-    </Container>
+      <Form.Control  style={{borderRadius:"1.5rem"}} type="text" placeholder="Dish name" onChange={event => {setSearchTerm(event.target.value)}} />
+      <ContentWithPaddingXlC>
+        <Container>
+          <Row>
+              <Col sm={8}>{cartProducts()} </Col>
+              <Col sm={4}>
+              {cartItems} {cartTotals()}</Col>
+          </Row>
+          </Container>
+        </ContentWithPaddingXlC>
+     
+      </ContentWithPaddingXlC>
+    </ContainerC>
   );
 }
 
