@@ -11,6 +11,7 @@ import 'firebase/database'
 import { useParams } from 'react-router-dom';
 import 'firebase/storage'
 import LoadingCard from "./LoadingCard";
+import { Link } from "react-router-dom";
 
 import { Popover } from 'react-tiny-popover'
 import { RemoveCartItems } from "./buttons/RemoveCartItems";
@@ -659,7 +660,7 @@ function RestaurantMenu() {
         {isPopoverOpen ? (
           
       <Container>
-        <button onClick={() => history.goBack()} className="back--button">Back</button>
+       <Link to="/"> <button className="back--button">Back</button> </Link>
       <Row>
           <Col sm={8}>{enterBillDetails()} </Col>
           <Col sm={4}>
@@ -669,7 +670,7 @@ function RestaurantMenu() {
         ) : (
           null
         )}
-        {isPopoverOpen ? (null) : (<button onClick={() => history.goBack()} className="back--button">Back</button>)}
+        {isPopoverOpen ? (null) : (<Link to="/"><button onClick={() => history.goBack()} className="back--button">Back</button></Link>)}
          
           <p style={{textAlign:"center"}}>(search with dish name)</p>
       
