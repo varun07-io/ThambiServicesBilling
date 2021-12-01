@@ -1,8 +1,8 @@
 .main--nav {
   display: flex;
   justify-content: center;
-  background-color: #6c4a4a;
+  background-image: linear-gradient(to right, #f0e7df, #c9cbd4);
   align-items: center;
-  color: white;
+  color: #5b5c79;
   height: 60px;
 }

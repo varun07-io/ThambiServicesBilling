@@ -17,21 +17,21 @@
 }
 
 .cart--btn--outline {
-  background-color: #18b978;
+  background-color: #f54f2b;
   color: #fff;
   padding: 8px 20px;
-  border: 1px solid #18b978;
+  border: 1px solid #f54f2b;
   transition: all 0.3s ease-out;
-  background-color: #18b978;
+  background-color: #f54f2b;
   color: #fff;
   margin-top: 10px;
-  border-radius: 50px;
+  border-radius: 10px;
   text-align: center;
   box-shadow: 2px 2px 3px #999;
 }
 
 .cart--btn--medium {
-  padding: 5px 15px;
+  padding: 3px 30px;
   font-size: 20px;
   font-family: "Montserrat", sans-serif;
   font-weight: 700;

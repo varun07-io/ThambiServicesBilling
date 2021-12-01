@@ -17,20 +17,20 @@
 }
 
 .remove--btn--outline {
-  background-color: #f90716;
+  background-color: #e31f2a;
   color: #fff;
-  padding: 1px 20px;
-  border: 1px solid #f90716;
+  padding: 3px 15px;
+  border: 1px solid #e31f2a;
   transition: all 0.3s ease-out;
-  background-color: #f90716;
+  background-color: #e31f2a;
   color: #fff;
-  border-radius: 50px;
+  border-radius: 10px;
   text-align: center;
   box-shadow: 2px 2px 3px #999;
 }
 
 .remove--btn--medium {
-  padding: 1px 15px;
+  padding: 3px 15px;
   font-size: 16px;
   font-family: "Montserrat", sans-serif;
   font-weight: 700;

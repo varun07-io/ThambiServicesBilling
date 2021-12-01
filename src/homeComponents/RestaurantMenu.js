@@ -18,8 +18,9 @@ import tw from "twin.macro";
 import { BillingButton } from "./buttons/BillingButton";
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { Form,Button } from "react-bootstrap";
+import { height } from "dom-helpers";
 
-const Card = tw.div`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0 shadow-lg p-2`;
+const Card = tw.div`bg-white rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0 shadow-lg p-2 font-extrabold`;
 const ContainerC = tw.div`relative min-h-screen`;
 const ContentWithPaddingXlC= tw.div`max-w-screen-xl mx-auto py-5 lg:py-5`;
 
@@ -163,10 +164,10 @@ function RestaurantMenu() {
 
   const cartTotals = () =>
     cartCountTotal === 0 ? (
-      <b>Cart is empty</b>
+      <b className="cart--empty">CART IS EMPTY</b>
     ) : (
       <>
-        <b>
+        <div className="total--cart--card">
           <p>Items in Cart: {cartCountTotal}</p>
           <p>
             Total Price: Rs-
@@ -175,18 +176,18 @@ function RestaurantMenu() {
               : cartPriceTotal.toFixed(2)}
           </p>
           <BillingButton onClick={() => setIsPopoverOpen(!isPopoverOpen)} buttonSize="billing--btn--medium" buttonStyle="billing--btn--outline" >Proceed for Billing</BillingButton>
-        </b>
+        </div>
       </>
     );
 
   const cartItems = cart.map((item, i) => (
     <React.Fragment  key={item.name}>
       {item.inCart && (
-        <>
+        <div className="cart--card">
           <p style={{fontWeight:"800"}}> Item Name: {item.name}</p>
           <p style={{fontWeight:"800"}}>
-            Item Count: <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>{" "}
-            {item.count} <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button>
+            Item Count: <button style={{backgroundColor:"#5B5C79", borderRadius:"5px", margin:"0 5px", color:"#fff", boxShadow: "0px 15px 10px -7px #111"}} onClick={() => decreaseQuantity(i)}>-</button>{" "}
+            <input className="input_cart" readOnly type="text" value={item.count} /> <button style={{backgroundColor:"#5B5C79", borderRadius:"5px", margin:"0 5px", color:"#fff", boxShadow: "0px 15px 10px -7px #111"}} onClick={() => increaseQuantity(i)}>+</button>
           </p>
           <p style={{fontWeight:"800"}}>
             Item Subtotal: Rs-
@@ -195,8 +196,8 @@ function RestaurantMenu() {
               : `${(item.count * item.price).toFixed(2)}`}
           </p>
           <RemoveCartItems buttonSize="remove--btn--medium" buttonStyle="remove--btn--outline" onClick={() => removeFromCart(i)}>Remove From Cart</RemoveCartItems>
-          <hr />
-        </>
+          
+        </div>
       )}
     </React.Fragment>
   ));
@@ -213,20 +214,19 @@ function RestaurantMenu() {
           }).map((item, i) => (
         <Card key={i}>
           <p>{item.name}</p>
-          <p>{item.category}</p>
           <p>{item.restaurantname}</p>
           <p>Price: Rs-{item.price}</p>
           {!item.inCart ? (
             <>
-              <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => decreaseQuantity(i)}>-</button>
+              <button style={{backgroundColor:"#5B5C79", borderRadius:"6px", margin:"0 5px", color:"#fff", boxShadow: "0px 15px 10px -7px #111"}} onClick={() => decreaseQuantity(i)}>-</button>
               <input className="input_cart" readOnly type="text" value={item.counterVal} />
-              <button style={{backgroundColor:"#80ED99", borderRadius:"5px", margin:"0 5px"}} onClick={() => increaseQuantity(i)}>+</button>
+              <button style={{backgroundColor:"#5B5C79", borderRadius:"6px", margin:"0 5px", color:"#fff", boxShadow: "0px 15px 10px -7px #111"}} onClick={() => increaseQuantity(i)}>+</button>
               <br />
               <AddToCart buttonSize="cart--btn--medium" buttonStyle="cart--btn--outline" onClick={() => addToCart(i)}>add</AddToCart>
             </>
           ) : (
             <p>
-              <b>Item added!</b>
+              <b className="itemadded--card">Item added!</b>
             </p>
           )}
         </Card>
@@ -389,14 +389,14 @@ function RestaurantMenu() {
               <p style={{fontWeight:"800", fontSize:"0.8rem"}}>
                 Drop Location: {drop}
               </p>
-              <hr />
+              <hr style={{backgroundColor:"#F54F2B", height:"2px"}} />
               <p style={{fontWeight:"800", fontSize:"0.7rem"}}>
                 Restaurant Bill amount: {billAmout}
               </p>
               <p style={{fontWeight:"800", fontSize:"0.7rem"}}>
                 Delivery Amount: {deliveryChange}
               </p>
-              <hr />
+              <hr style={{backgroundColor:"#F54F2B", height:"2px"}}/>
               <p style={{fontWeight:"800", fontSize:"1rem"}}>
                 Total: {grandTotal}
               </p>
@@ -550,7 +550,7 @@ function RestaurantMenu() {
             </div>
             <div
               style={{
-                backgroundColor: '#6AC47E',
+                backgroundColor: '#5b5c79',
                 padding:20,
                 borderRadius: 10,
                 color: 'white',
@@ -558,10 +558,10 @@ function RestaurantMenu() {
                 marginBottom: 12
               }}
             >
-  <Row
+  <Row 
 
   >
-              <Col>
+              <Col >
               <Form.Group className="mb-3" >
     <Form.Label>Pick-Up Location</Form.Label>
 
@@ -586,7 +586,7 @@ function RestaurantMenu() {
 
               <Form.Control type="number" onChange={(e) => setestimatedDistance(e.target.value)} placeholder="Enter the Drop Location" />
   </Form.Group>
-  <Button style={{marginBottom:25,marginTop:15,paddingRight:15,paddingLeft:15}} variant="primary" type="submit" size="sm" onClick={calculateDeliveryPrice}>
+  <Button style={{marginBottom:25,marginTop:15,paddingRight:15,paddingLeft:15, backgroundColor:"#F54F2B"}} variant="primary" type="submit" size="sm" onClick={calculateDeliveryPrice}>
     Calculate
   </Button>
             </Row>
@@ -650,7 +650,7 @@ function RestaurantMenu() {
   let history = useHistory();
 
   return (
-    <ContainerC style={{backgroundColor:"#DDBEBE"}}>
+    <ContainerC className="resmenu--main">
       <ContentWithPaddingXlC>
 
 
