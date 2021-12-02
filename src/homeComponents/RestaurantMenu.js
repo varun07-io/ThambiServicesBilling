@@ -1,6 +1,6 @@
 import React, { useState,useEffect,useRef } from "react";
 import RestaurantMenuItems from "./RestaurantMenuItems";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import "./RestaurantMenu.css";
 import { Container, Row, Col, Table,Spinner } from "react-bootstrap";
 import { AddToCart } from "./buttons/AddToCart";
@@ -659,7 +659,12 @@ function RestaurantMenu() {
         {isPopoverOpen ? (
           
       <Container>
-        <button onClick={() => history.goBack()} className="back--button">Back</button>
+        <Link
+        to="/"
+        className="back--button"
+        >
+        Back
+        </Link>
       <Row>
           <Col sm={8}>{enterBillDetails()} </Col>
           <Col sm={4}>
