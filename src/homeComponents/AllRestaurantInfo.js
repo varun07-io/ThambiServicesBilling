@@ -27,19 +27,19 @@ const ContentWithPaddingXl= tw.div`max-w-screen-xl mx-auto py-5 lg:py-5`;
 const Subheading = tw.h5`font-bold text-gray-500`
 const Posts = tw.div`mt-12 flex flex-wrap -mr-3 relative justify-center items-center`;
 
-const Post = tw.a`flex flex-col h-full bg-gray-200 rounded`;
+const Post = tw.a`flex flex-col h-80 bg-gray-200 rounded-3xl text-center`;
 const PostImage = styled.div`
   ${props => css`background-image: url("${props.imageSrc}");`}
   ${tw`h-64 sm:h-80 bg-center bg-cover rounded-t`}
 `;
-const PostText = tw.div`flex-1 px-6 py-8` 
+const PostText = tw.div`flex-1 px-6 py-8 text-center` 
 const PostTitle = tw.h6`font-bold group-hocus:text-gray-500 transition duration-300 `;
-const PostDescription = tw.p``;
-const AuthorInfo = tw.div`flex`;
+const PostDescription = tw.p`text-center`;
+const AuthorInfo = tw.div`flex text-center`;
 const AuthorImage = tw.img`w-12 h-12 rounded-full mr-3`;
-const AuthorTextInfo = tw.div`text-xs text-gray-600`;
-const AuthorName = tw.div`font-semibold mt-2`;
-const AuthorProfile = tw.div`pt-1 font-medium`;
+const AuthorTextInfo = tw.div`text-xs text-gray-600 text-center`;
+const AuthorName = tw.div`font-semibold mt-2 text-center`;
+const AuthorProfile = tw.div`pt-1 font-medium text-center`;
 
 const PostContainer = styled.div`
   ${tw`relative z-20 mt-10 sm:pt-3 pr-3 w-full sm:w-1/2 lg:w-1/3 max-w-sm mx-auto sm:max-w-none sm:mx-0`}
@@ -47,7 +47,7 @@ const PostContainer = styled.div`
   ${props => props.featured && css`
     ${tw`w-full sm:w-full lg:w-2/3`}
     ${Post} {
-      ${tw`sm:flex-row items-center sm:pr-3`}
+      ${tw`sm:flex-row items-center sm:pr-3 text-center`}
     }
     ${PostImage} {
       ${tw`sm:h-80 sm:min-h-full w-full sm:w-1/2 rounded-t sm:rounded-t-none sm:rounded-l`}
@@ -63,7 +63,7 @@ const PostContainer = styled.div`
       ${tw`mt-8 flex items-center`}
     }
     ${AuthorName} {
-      ${tw`mt-0 font-bold text-gray-700 no-underline`}
+      ${tw`mt-0 font-bold text-gray-700 no-underline text-center`}
     }
   `}
 `;
@@ -111,7 +111,7 @@ const AllRestaurantInfo = () => {
   }
 
   return (
-    <Container style={{backgroundColor:"#DDBEBE"}}>
+    <Container className="allres--main">
       <ContentWithPaddingXl>
         <HeadingContainer>
           {/* {subheading && <Subheading>{subheading}</Subheading>} */}

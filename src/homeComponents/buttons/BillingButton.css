@@ -25,9 +25,8 @@
   background-color: #18b978;
   color: #fff;
   margin-top: 10px;
-  border-radius: 50px;
+  border-radius: 10px;
   text-align: center;
-  box-shadow: 2px 2px 3px #999;
 }
 
 .billing--btn--medium {

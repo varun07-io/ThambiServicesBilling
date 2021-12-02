@@ -15,7 +15,7 @@
 }
 .loading div {
   position: absolute;
-  background: #6c4a4a;
+  background: #5b5c79;
   opacity: 1;
   border-radius: 50%;
   animation: loading 1.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
@@ -38,4 +38,8 @@
     height: 58px;
     opacity: 0;
   }
+}
+
+.allres--main {
+  background-image: linear-gradient(to right, #f0e7df, #c9cbd4);
 }
